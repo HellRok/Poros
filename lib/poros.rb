@@ -19,10 +19,12 @@ module Poros
 
   def destroy
     File.delete(poros.file_path)
+    self
   end
 
   def save
     File.write(poros.file_path, poros.to_h.to_yaml)
+    self
   end
 
   class PorosInfo
@@ -63,15 +65,23 @@ module Poros
     end
 
     def file_path(uuid)
+      FileUtils.mkdir_p(data_directory) unless File.exist?(data_directory)
       File.join(data_directory, file_name(uuid))
     end
 
     def data_directory
-      "./db"
+      "./db/#{self}/"
     end
 
     def file_name(uuid)
-      "#{self}-#{uuid}.yml"
+      "#{uuid}.yml"
+    end
+
+    def where(query)
+      Dir.glob(File.join(data_directory, '*.yml')).map { |file|
+        data = YAML.load(File.read(file))
+        find(data[:uuid]) if query.all? { |key, value| data[key] == value }
+      }.compact
     end
   end
 end

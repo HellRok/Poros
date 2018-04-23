@@ -34,4 +34,28 @@ describe Poros do
       assert_equal found_object.order, @object.order
     end
   end
+
+  describe '#where' do
+    before do
+      @object_1 = DefaultObject.new(name: 'first', order: 1).save
+      @object_2 = DefaultObject.new(name: 'second', order: 2).save
+      @object_3 = DefaultObject.new(name: 'third', order: 1).save
+    end
+
+    after do
+      @object_1.destroy
+      @object_2.destroy
+      @object_3.destroy
+    end
+
+    it 'finds on exact matches' do
+      assert_equal DefaultObject.where(order: 1).map(&:uuid).sort,
+        [@object_1, @object_3].map(&:uuid).sort
+    end
+
+    it 'finds on exact matches of multiple options' do
+      assert_equal DefaultObject.where(order: 1, name: 'third').map(&:uuid),
+        [@object_3.uuid]
+    end
+  end
 end

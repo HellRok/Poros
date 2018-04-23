@@ -9,6 +9,6 @@ class DefaultObject
   end
 
   def self.data_directory
-    "./tmp"
+    "./tmp/#{self}/"
   end
 end
