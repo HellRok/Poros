@@ -7,4 +7,8 @@ class DefaultObject
     @name = name
     @order = order
   end
+
+  def self.data_directory
+    "./tmp"
+  end
 end

@@ -21,6 +21,7 @@ Or install it yourself as:
 
 `#initialize` must use keyword arguments
 `poro_attrs :blah` will allso define `attr_accessor :blah`
+`self.data_directory` set this to override where the data is stored
 
 ## Development
 

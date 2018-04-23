@@ -31,11 +31,7 @@ module Poros
     end
 
     def file_path
-      File.join("./tmp", file_name)
-    end
-
-    def file_name
-      "#{@object.class}-#{@object.uuid}.yml"
+      @object.class.file_path(@object.uuid)
     end
 
     def to_h
@@ -55,6 +51,27 @@ module Poros
 
     def poro_columns
       @poro_columns
+    end
+
+    def find(uuid)
+      attrs = YAML.load(File.read(file_path(uuid)))
+      attrs.delete(:uuid)
+
+      object = new(attrs)
+      object.uuid = uuid
+      object
+    end
+
+    def file_path(uuid)
+      File.join(data_directory, file_name(uuid))
+    end
+
+    def data_directory
+      "./db"
+    end
+
+    def file_name(uuid)
+      "#{self}-#{uuid}.yml"
     end
   end
 end
