@@ -21,7 +21,9 @@ Or install it yourself as:
 
 `#initialize` must use keyword arguments
 `poro_attrs :blah` will allso define `attr_accessor :blah`
+`poro_indexes :blah` will create indexes on these columns, this is handy for lots of data
 `self.data_directory` set this to override where the data is stored
+`where` accepts regexs or exact matches
 
 ## Development
 

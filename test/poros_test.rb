@@ -12,7 +12,7 @@ describe Poros do
     end
 
     it 'saves to a file' do
-      assert_equal File.exists?(@object.poros.file_path), true
+      assert_equal File.exist?(@object.poros.file_path), true
     end
   end
 
@@ -37,25 +37,70 @@ describe Poros do
 
   describe '#where' do
     before do
-      @object_1 = DefaultObject.new(name: 'first', order: 1).save
-      @object_2 = DefaultObject.new(name: 'second', order: 2).save
-      @object_3 = DefaultObject.new(name: 'third', order: 1).save
+      @object_1 = DefaultObject.new(name: 'first', order: 1, active: true).save
+      @object_2 = DefaultObject.new(name: 'second', order: 2, active: true).save
+      @object_3 = DefaultObject.new(name: 'third', order: 1, active: false).save
+      @object_4 = DefaultObject.new(name: 'teeeeeest', order: 3, active: true).save
+      @object_5 = DefaultObject.new(name: 'test', order: 3, active: false).save
     end
 
     after do
-      @object_1.destroy
-      @object_2.destroy
-      @object_3.destroy
+      DefaultObject.all.map(&:destroy)
     end
 
-    it 'finds on exact matches' do
-      assert_equal DefaultObject.where(order: 1).map(&:uuid).sort,
-        [@object_1, @object_3].map(&:uuid).sort
+    describe 'without indexes' do
+      it 'finds on exact matches' do
+        assert_equal DefaultObject.where(order: 1).map(&:uuid).sort,
+          [@object_1, @object_3].map(&:uuid).sort
+      end
+
+      it 'finds on exact matches of multiple options' do
+        assert_equal DefaultObject.where(order: 1, name: 'third').map(&:uuid),
+          [@object_3.uuid]
+      end
+
+      it 'handles boolean values' do
+        assert_equal DefaultObject.where(order: 1, active: true).map(&:uuid),
+          [@object_1.uuid]
+        assert_equal DefaultObject.where(order: 1, active: false).map(&:uuid),
+          [@object_3.uuid]
+      end
+
+      it 'finds based on regexes' do
+        assert_equal DefaultObject.where(name: /t.+st/, order: 3).map(&:uuid).sort,
+          [@object_4, @object_5].map(&:uuid).sort
+      end
     end
 
-    it 'finds on exact matches of multiple options' do
-      assert_equal DefaultObject.where(order: 1, name: 'third').map(&:uuid),
-        [@object_3.uuid]
+    describe 'with indexes' do
+      before do
+        class DefaultObject
+          poro_index :name, :order
+        end
+        DefaultObject.all.map(&:save)
+      end
+
+      it 'finds on exact matches' do
+        assert_equal DefaultObject.where(order: 1).map(&:uuid).sort,
+          [@object_1, @object_3].map(&:uuid).sort
+      end
+
+      it 'finds on exact matches of multiple options' do
+        assert_equal DefaultObject.where(order: 1, name: 'third').map(&:uuid),
+          [@object_3.uuid]
+      end
+
+      it 'handles boolean values' do
+        assert_equal DefaultObject.where(order: 1, active: true).map(&:uuid),
+          [@object_1.uuid]
+        assert_equal DefaultObject.where(order: 1, active: false).map(&:uuid),
+          [@object_3.uuid]
+      end
+
+      it 'finds based on regexes' do
+        assert_equal DefaultObject.where(name: /t.+st/, order: 3).map(&:uuid).sort,
+          [@object_4, @object_5].map(&:uuid).sort
+      end
     end
   end
 end
