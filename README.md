@@ -7,6 +7,9 @@ The name stands for Plain Old Ruby Object Storage.
 
 ## Installation
 
+This gem requires at least Ruby 2.1 because it uses `.to_h` on an Array and
+named arguments for initialize.
+
 Add this line to your application's Gemfile:
 
 ```gem 'poros' ```
