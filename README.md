@@ -1,4 +1,4 @@
-# Poros
+# Poros ![TravisCI](https://travis-ci.org/HellRok/Poros.svg?branch=master)
 
 This is a little gem written for persistence and active-record like querying of
 objects with a simple YAML based backend.
