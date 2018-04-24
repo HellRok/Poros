@@ -110,7 +110,7 @@ module Poros
         case value
         when Regexp
           index_data[key].keys.flat_map { |value_name|
-            index_data[key][value_name] if value.match?(value_name)
+            index_data[key][value_name] if value =~ value_name
           }.compact
         else
           index_data[key].has_key?(value) ?
@@ -124,7 +124,7 @@ module Poros
           data[:uuid] if table_scan.all? { |key, value|
             case value
             when Regexp
-              value.match? data[key]
+              value =~ data[key]
             else
               data[key] == value
             end
