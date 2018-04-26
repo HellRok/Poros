@@ -79,6 +79,13 @@ describe Poros do
         assert_equal DefaultObject.where(order: [1, 2]).map(&:uuid).sort,
           [@object_1, @object_2, @object_3].map(&:uuid).sort
       end
+
+      it 'finds by proc' do
+        assert_equal DefaultObject.where(
+          order: -> value { value + 5 == 6 },
+          name: -> value { value == 'third' }
+        ).map(&:uuid), [@object_3].map(&:uuid)
+      end
     end
 
     describe 'with indexes' do
@@ -116,6 +123,13 @@ describe Poros do
       it 'finds in array' do
         assert_equal DefaultObject.where(order: [1, 2]).map(&:uuid).sort,
           [@object_1, @object_2, @object_3].map(&:uuid).sort
+      end
+
+      it 'finds by proc' do
+        assert_equal DefaultObject.where(
+          order: -> value { value + 5 == 6 },
+          name: -> value { value == 'third' }
+        ).map(&:uuid), [@object_3].map(&:uuid)
       end
     end
   end

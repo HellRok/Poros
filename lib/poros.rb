@@ -114,6 +114,10 @@ module Poros
           }.compact
         when Array
           value.flat_map { |value_name| index_data[key][value_name] }
+        when Proc
+          index_data[key].keys.flat_map { |value_name|
+            index_data[key][value_name] if value.call(value_name)
+          }.compact
         else
           index_data[key].has_key?(value) ?
             index_data[key][value] : []
@@ -130,6 +134,8 @@ module Poros
               value =~ data[key]
             when Array
               value.include?(data[key])
+            when Proc
+              value.call(data[key])
             else
               data[key] == value
             end
