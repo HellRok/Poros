@@ -74,6 +74,11 @@ describe Poros do
         assert_equal DefaultObject.where(name: /t.+st/, order: 3).map(&:uuid).sort,
           [@object_4, @object_5].map(&:uuid).sort
       end
+
+      it 'finds in array' do
+        assert_equal DefaultObject.where(order: [1, 2]).map(&:uuid).sort,
+          [@object_1, @object_2, @object_3].map(&:uuid).sort
+      end
     end
 
     describe 'with indexes' do
@@ -106,6 +111,11 @@ describe Poros do
       it 'finds based on regexes' do
         assert_equal DefaultObject.where(name: /t.+st/, order: 3).map(&:uuid).sort,
           [@object_4, @object_5].map(&:uuid).sort
+      end
+
+      it 'finds in array' do
+        assert_equal DefaultObject.where(order: [1, 2]).map(&:uuid).sort,
+          [@object_1, @object_2, @object_3].map(&:uuid).sort
       end
     end
   end
