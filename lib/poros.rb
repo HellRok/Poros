@@ -120,6 +120,7 @@ module Poros
 
       if table_scan.size > 0
         scanned_results = Dir.glob(File.join(data_directory, '*.yml')).map { |file|
+          next if file == index_file
           data = YAML.load(File.read(file))
           data[:uuid] if table_scan.all? { |key, value|
             case value
@@ -185,6 +186,15 @@ module Poros
         end
       end
       write_index_data if !@in_transaction && perist
+    end
+
+    def rebuild_indexes
+      transaction do
+        @data_changed = true
+        @index_data = {}
+        File.delete(index_file) if File.exist?(index_file)
+        all.each { |object| update_index(object) }
+      end
     end
 
     def transaction(&block)

@@ -49,6 +49,10 @@ describe Poros do
     end
 
     describe 'without indexes' do
+      before do
+        DefaultObject.instance_variable_set(:@poro_indexes, nil)
+      end
+
       it 'finds on exact matches' do
         assert_equal DefaultObject.where(order: 1).map(&:uuid).sort,
           [@object_1, @object_3].map(&:uuid).sort
@@ -74,10 +78,12 @@ describe Poros do
 
     describe 'with indexes' do
       before do
-        class DefaultObject
-          poro_index :name, :order
-        end
-        DefaultObject.all.map(&:save)
+        DefaultObject.instance_variable_set(:@poro_indexes, [:name, :order])
+        DefaultObject.rebuild_indexes
+      end
+
+      after do
+        DefaultObject.instance_variable_set(:@poro_indexes, nil)
       end
 
       it 'finds on exact matches' do
