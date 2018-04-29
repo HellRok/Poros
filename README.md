@@ -52,9 +52,9 @@ many_widgets = Widget.where(order: 1, name: /regex/)
 attributes defined in `poro_attr`. In the future I may define this function for
 you but for right now I'm not sure I want to go that direction.
 
-`poro_attrs :blah` will define a getter and setter for `:blah` and also be persisted when you run `#save`
+`poro_attr :blah` will define a getter and setter for `:blah` and also be persisted when you run `#save`
 
-`poro_indexes :blah` will create indexes on these columns, this will greatly
+`poro_index :blah` will create indexes on these columns, this will greatly
 speed up searching but if your index gets really big the initial load of a
 model will take quite a long time.
 
