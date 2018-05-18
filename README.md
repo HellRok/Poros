@@ -62,8 +62,7 @@ model will take quite a long time.
 save to the default of `./db/#{self}`. If you do re-define it you _must_
 seperate each model into it's own folder or it will have _lots_ of issues.
 
-`.where` acts a bit like ActiveRecord but it's not currently chainable (I plan
-to do that in the future though) and takes exact matches, regexs, arrays, or
+`.where` acts a bit like ActiveRecord and it takes exact matches, regexs, arrays, or
 lambdas in any combination.
 
 ```ruby
@@ -72,10 +71,10 @@ Widget.where(name: 'sprocket')
 Widget.where(name: /spr.*cket/)
 Widget.where(order: -> value { value > 3 })
 Widget.where(order: [1, 5, 8], active: true)
+Widget.where(order: 1).where(name: 'cog')
 
 # Invalid examples
 Widget.where(name: 'sprocket', name: 'cog') # can't check same value twice, use arrays
-Widget.where(order: 1).where(name: 'cog')   # can't chain wheres
 ```
 
 

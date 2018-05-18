@@ -1,6 +1,7 @@
 require 'yaml'
 require 'securerandom'
 
+require 'poros/query'
 require 'poros/instance_methods'
 require 'poros/class_methods'
 

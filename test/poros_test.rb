@@ -66,7 +66,7 @@ describe Poros do
       it 'handles boolean values' do
         assert_equal DefaultObject.where(order: 1, active: true).map(&:uuid),
           [@object_1.uuid]
-        assert_equal DefaultObject.where(order: 1, active: false).map(&:uuid),
+        assert_equal DefaultObject.where(order: 1).where(active: false).map(&:uuid),
           [@object_3.uuid]
       end
 
@@ -109,7 +109,7 @@ describe Poros do
       end
 
       it 'handles boolean values' do
-        assert_equal DefaultObject.where(order: 1, active: true).map(&:uuid),
+        assert_equal DefaultObject.where(order: 1).where(active: true).map(&:uuid),
           [@object_1.uuid]
         assert_equal DefaultObject.where(order: 1, active: false).map(&:uuid),
           [@object_3.uuid]

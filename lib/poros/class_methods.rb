@@ -57,54 +57,7 @@ module Poros
     end
 
     def where(query)
-      indexed, table_scan = query.partition { |index, key| poro_indexes.include?(index) }
-
-      indexed_results = indexed.map { |key, value|
-        case value
-        when Regexp
-          index_data[key].keys.flat_map { |value_name|
-            index_data[key][value_name] if value =~ value_name
-          }.compact
-        when Array
-          value.flat_map { |value_name| index_data[key][value_name] }
-        when Proc
-          index_data[key].keys.flat_map { |value_name|
-            index_data[key][value_name] if value.call(value_name)
-          }.compact
-        else
-          index_data[key].has_key?(value) ?
-            index_data[key][value] : []
-        end
-      }.inject(:&)
-
-      if table_scan.size > 0
-        scanned_results = Dir.glob(File.join(data_directory, '*.yml')).map { |file|
-          next if file == index_file
-          data = YAML.load(File.read(file))
-          data[:uuid] if table_scan.all? { |key, value|
-            case value
-            when Regexp
-              value =~ data[key]
-            when Array
-              value.include?(data[key])
-            when Proc
-              value.call(data[key])
-            else
-              data[key] == value
-            end
-          }
-        }.compact
-      end
-
-      if indexed.size > 0 && table_scan.size > 0
-        results = indexed_results & scanned_results
-      elsif indexed.size > 0
-        results = indexed_results
-      else
-        results = scanned_results
-      end
-
-      results.map { |uuid| find(uuid) }
+      Poros::Query.new(self).where(query)
     end
 
     def index_data
