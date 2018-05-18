@@ -23,5 +23,9 @@ module Poros
       self.class.update_index(self)
       self
     end
+
+    def ==(other)
+      uuid == other.uuid
+    end
   end
 end

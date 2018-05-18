@@ -9,6 +9,21 @@ module Poros
       end
     end
 
+    def belongs_to(key)
+      define_method key do
+        object = constantize(key)
+        foreign_key = (key.to_s + '_uuid').to_sym
+
+        object.find(self.send(foreign_key))
+      end
+
+      define_method key.to_s + '=' do |value|
+        foreign_key = (key.to_s + '_uuid=')
+
+        self.send(foreign_key, value.uuid)
+      end
+    end
+
     private
 
     def singularize(word)
@@ -25,7 +40,7 @@ module Poros
     end
 
     def constantize(word)
-      object_name = word.split('_').map(&:capitalize).join
+      object_name = word.to_s.split('_').map(&:capitalize).join
 
       Object.const_get(object_name)
     end

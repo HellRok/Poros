@@ -99,9 +99,12 @@ class Book
 
   poro_attr :title, :author_uuid
 
-  def initialize(title: '', author_uuid: nil)
+  belongs_to :author
+
+  def initialize(title: '', author: nil, author_uuid: nil)
     @title = title
-    @author_uuid = author_uuid
+    @author_uuid = author_uuid if author_uuid
+    self.author = author if author
   end
 end
 
@@ -112,7 +115,7 @@ book_2 = Book.new(title: 'The Time Traveler\'s Wife', author_uuid: audrey_niffen
 book_3 = Book.new(title: 'Of Mice and Men', author_uuid: john_steinbeck.uuid).save
 ```
 
-And then you'll be able to do things like `author_2.books.where(name: /wrath/)`
+And then you'll be able to do things like `author_2.books.where(name: /wrath/)` or `book_2.author`
 
 ## Development
 

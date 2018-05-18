@@ -35,9 +35,12 @@ class Book
 
   poro_attr :title, :author_uuid
 
-  def initialize(title: '', author_uuid: nil)
+  belongs_to :author
+
+  def initialize(title: '', author: nil, author_uuid: nil)
     @title = title
-    @author_uuid = author_uuid
+    @author_uuid = author_uuid if author_uuid
+    self.author = author if author
   end
 
   def self.data_directory
