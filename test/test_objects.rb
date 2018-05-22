@@ -20,6 +20,7 @@ class Author
   poro_attr :name
 
   has_many :books
+  has_many :boops, class_name: 'DefaultObject', foreign_key: :name, primary_key: :name
 
   def initialize(name: '')
     @name = name

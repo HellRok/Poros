@@ -1,11 +1,13 @@
 module Poros
   module Relations
-    def has_many(key)
-      define_method key do
-        object = constantize(singularize(key))
-        foreign_key = (self.class.to_s.downcase + '_uuid').to_sym
+    def has_many(key, class_name: nil, foreign_key: nil, primary_key: :uuid)
 
-        object.where(foreign_key => self.uuid)
+      define_method key do
+        foreign_key = (foreign_key || self.class.to_s.downcase + '_uuid').to_sym
+        object = constantize(singularize(class_name || key))
+        primary_value = self.send(primary_key)
+
+        object.where(foreign_key => primary_value)
       end
     end
 
@@ -40,10 +42,12 @@ module Poros
     end
 
     def constantize(word)
-      object_name = word.to_s.split('_').map(&:capitalize).join
+      object_name = word
+      if word.downcase == word
+        object_name = word.to_s.split('_').map(&:capitalize).join
+      end
 
       Object.const_get(object_name)
     end
   end
 end
-

@@ -7,6 +7,8 @@ describe Poros::Relations do
     @book_1 = Book.new(title: 'The Grapes of Wrath', author: @author_2).save
     @book_2 = Book.new(title: 'The Time Traveler\'s Wife', author: @author_1).save
     @book_3 = Book.new(title: 'Of Mice and Men', author: @author_2).save
+    @boop_1 = DefaultObject.new(name: 'Audrey Niffenegger').save
+    @boop_2 = DefaultObject.new(name: 'John Steinbeck').save
   end
 
   after do
@@ -15,12 +17,23 @@ describe Poros::Relations do
     @book_1.destroy
     @book_2.destroy
     @book_3.destroy
+    @boop_1.destroy
+    @boop_2.destroy
   end
 
-  describe '#has_many' do
-    it 'returns it\'s children' do
-      assert_equal @author_1.books.map(&:uuid), [@book_2].map(&:uuid)
-      assert_equal @author_2.books.map(&:uuid).sort, [@book_1, @book_3].map(&:uuid).sort
+  describe '#has_many without options' do
+    describe 'without options' do
+      it 'returns it\'s children' do
+        assert_equal @author_1.books.map(&:uuid), [@book_2].map(&:uuid)
+        assert_equal @author_2.books.map(&:uuid).sort, [@book_1, @book_3].map(&:uuid).sort
+      end
+    end
+
+    describe 'with options' do
+      it 'returns it\'s children' do
+        assert_equal @author_1.boops.map(&:uuid), [@boop_1].map(&:uuid)
+        assert_equal @author_2.boops.map(&:uuid), [@boop_2].map(&:uuid)
+      end
     end
   end
 
