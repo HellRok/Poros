@@ -9,6 +9,9 @@ describe Poros::Relations do
     @book_3 = Book.new(title: 'Of Mice and Men', author: @author_2).save
     @boop_1 = DefaultObject.new(name: 'Audrey Niffenegger').save
     @boop_2 = DefaultObject.new(name: 'John Steinbeck').save
+    @boop_3 = DefaultObject.new(name: 'The Grapes of Wrath').save
+    @boop_4 = DefaultObject.new(name: 'The Time Traveler\'s Wife').save
+    @boop_5 = DefaultObject.new(name: 'Of Mice and Men').save
   end
 
   after do
@@ -19,6 +22,9 @@ describe Poros::Relations do
     @book_3.destroy
     @boop_1.destroy
     @boop_2.destroy
+    @boop_3.destroy
+    @boop_4.destroy
+    @boop_5.destroy
   end
 
   describe '#has_many without options' do
@@ -38,10 +44,20 @@ describe Poros::Relations do
   end
 
   describe '#belongs_to' do
-    it 'returns it\'s author' do
-      assert_equal @book_1.author, @author_2
-      assert_equal @book_2.author, @author_1
-      assert_equal @book_3.author, @author_2
+    describe 'without options' do
+      it 'returns it\'s author' do
+        assert_equal @book_1.author, @author_2
+        assert_equal @book_2.author, @author_1
+        assert_equal @book_3.author, @author_2
+      end
+    end
+
+    describe 'with options' do
+      it 'returns it\'s boop' do
+        assert_equal @book_1.boop, @boop_3
+        assert_equal @book_2.boop, @boop_4
+        assert_equal @book_3.boop, @boop_5
+      end
     end
   end
 end

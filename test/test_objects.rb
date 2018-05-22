@@ -37,6 +37,7 @@ class Book
   poro_attr :title, :author_uuid
 
   belongs_to :author
+  belongs_to :boop, class_name: 'DefaultObject', foreign_key: :title, primary_key: :name
 
   def initialize(title: '', author: nil, author_uuid: nil)
     @title = title

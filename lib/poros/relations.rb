@@ -11,18 +11,20 @@ module Poros
       end
     end
 
-    def belongs_to(key)
+    def belongs_to(key, class_name: nil, foreign_key: nil, primary_key: :uuid)
       define_method key do
-        object = constantize(key)
-        foreign_key = (key.to_s + '_uuid').to_sym
+        object = constantize(class_name || key)
+        foreign_method = (foreign_key || (key.to_s + '_uuid')).to_sym
+        primary_attr = primary_key || (key.to_s + '_uuid')
 
-        object.find(self.send(foreign_key))
+        object.where(primary_attr => self.send(foreign_method)).first
       end
 
       define_method key.to_s + '=' do |value|
-        foreign_key = (key.to_s + '_uuid=')
+        foreign_attr = foreign_key || (key.to_s + '_uuid=')
+        primary_method = primary_key || (key.to_s + '_uuid')
 
-        self.send(foreign_key, value.uuid)
+        self.send(foreign_attr, value.send(primary_method))
       end
     end
 
