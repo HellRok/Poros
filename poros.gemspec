@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.description   = 'Persist your objects and query them in an active record like way'
   spec.authors       = ["Sean Ross Earle"]
   spec.email         = ["sean.earle@oeQuacki.com"]
-  spec.homepage      = "https://github.com/HellRok/YAMLCache"
+  spec.homepage      = "https://github.com/HellRok/Poros"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
