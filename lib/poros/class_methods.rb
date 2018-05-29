@@ -75,6 +75,7 @@ module Poros
     end
 
     def write_index_data
+      return if in_transaction
       File.write(index_file, @index_data.to_yaml)
     end
 
@@ -90,20 +91,22 @@ module Poros
         @index_data[index][value] = @index_data[index][value] | [object.uuid]
       end
 
-      write_index_data unless @in_transaction
+      write_index_data
     end
 
     def remove_from_index(object, perist = true)
       index_data
+      @data_changed = true
 
       poro_indexes.each do |index|
         @index_data[index] = {} unless @index_data.has_key?(index)
         @index_data[index].keys.each do |value|
           @index_data[index][value] ||= []
           @index_data[index][value] -= [object.uuid]
+          @index_data[index].delete(value) if @index_data[index][value] == []
         end
       end
-      write_index_data if !@in_transaction && perist
+      write_index_data if perist
     end
 
     def rebuild_indexes

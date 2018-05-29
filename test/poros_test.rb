@@ -3,8 +3,7 @@ require "test_helper"
 describe Poros do
   describe '#save' do
     before do
-      @object = DefaultObject.new(name: 'test', order: 100)
-      @object.save
+      @object = DefaultObject.new(name: 'test', order: 100).save
     end
 
     after do
@@ -18,8 +17,7 @@ describe Poros do
 
   describe '#find' do
     before do
-      @object = DefaultObject.new(name: 'other', order: 1)
-      @object.save
+      @object = DefaultObject.new(name: 'other', order: 1).save
       @uuid = @object.uuid
     end
 
@@ -96,6 +94,7 @@ describe Poros do
 
       after do
         DefaultObject.instance_variable_set(:@poro_indexes, nil)
+        DefaultObject.rebuild_indexes
       end
 
       it 'finds on exact matches' do
@@ -131,6 +130,22 @@ describe Poros do
           name: -> value { value == 'third' }
         ).map(&:uuid), [@object_3].map(&:uuid)
       end
+    end
+  end
+
+  describe '#destroy' do
+    before do
+      DefaultObject.instance_variable_set(:@poro_indexes, [:name])
+    end
+
+    after do
+      DefaultObject.instance_variable_set(:@poro_indexes, nil)
+    end
+
+    it 'properly clears the index file' do
+      object = DefaultObject.new(name: 'test').save
+      DefaultObject.transaction { object.destroy }
+      assert_equal File.read(DefaultObject.index_file), "---\n:name: {}\n"
     end
   end
 end
