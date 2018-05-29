@@ -1,3 +1,5 @@
+require 'fileutils'
+
 module Poros
   module ClassMethods
     attr_accessor :in_transaction, :data_changed
@@ -61,7 +63,7 @@ module Poros
     end
 
     def index_data
-      return @index_data if @index_data
+      return @index_data if defined? @index_data
 
       data = File.exist?(index_file) ? YAML.load(File.read(index_file)) : {}
       # Make sure we always have every index as a key

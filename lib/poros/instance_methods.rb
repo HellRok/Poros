@@ -2,7 +2,7 @@ require 'poros/info'
 
 module Poros
   module InstanceMethods
-    attr_accessor :uuid
+    attr_writer :uuid
     def uuid
       @uuid ||= SecureRandom.uuid
     end
