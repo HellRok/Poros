@@ -1,11 +1,13 @@
 sudo: false
 language: ruby
-rvm:
-  - 2.1.10
-  - 2.2.10
-  - 2.3.8
-  - 2.4.4
-  - 2.5.3
-  - 2.6.1
-  - ruby-head
-before_install: gem install bundler
+matrix:
+  include:
+    - rvm: 2.1.10
+      gemfile: bundler1.gemfile
+    - rvm: 2.2.10
+      gemfile: bundler1.gemfile
+    - rvm: 2.3.8
+    - rvm: 2.4.4
+    - rvm: 2.5.3
+    - rvm: 2.6.1
+    - rvm: ruby-head
