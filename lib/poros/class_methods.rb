@@ -28,7 +28,7 @@ module Poros
       attrs = YAML.load(File.read(file_path(uuid)))
       attrs.delete(:uuid)
 
-      object = new(attrs)
+      object = new(**attrs)
       object.uuid = uuid
       object
     end
