@@ -41,7 +41,10 @@ module Poros
       if table_scan.size > 0
         scanned_results = Dir.glob(File.join(@object.data_directory, '*.yml')).map { |file|
           next if file == @object.index_file
-          data = YAML.load(File.read(file))
+          data = YAML.safe_load(
+            File.read(file),
+            permitted_classes: Poros::Config.configuration[:permitted_classes],
+          )
           data[:uuid] if table_scan.all? { |key, value|
             case value
             when Regexp

@@ -25,7 +25,10 @@ module Poros
     end
 
     def find(uuid)
-      attrs = YAML.load(File.read(file_path(uuid)))
+      attrs = YAML.safe_load(
+        File.read(file_path(uuid)),
+        permitted_classes: Poros::Config.configuration[:permitted_classes],
+      )
       attrs.delete(:uuid)
 
       object = new(**attrs)
@@ -53,7 +56,10 @@ module Poros
     def all
       Dir.glob(File.join(data_directory, '*.yml')).map { |file|
         next if file == index_file
-        data = YAML.load(File.read(file))
+        data = YAML.safe_load(
+          File.read(file),
+          permitted_classes: Poros::Config.configuration[:permitted_classes],
+        )
         find(data[:uuid])
       }.compact
     end
@@ -65,7 +71,12 @@ module Poros
     def index_data
       return @index_data if defined? @index_data
 
-      data = File.exist?(index_file) ? YAML.load(File.read(index_file)) : {}
+      data = File.exist?(index_file) ?
+        YAML.safe_load(
+          File.read(index_file),
+          permitted_classes: Poros::Config.configuration[:permitted_classes],
+        ) : {}
+
       # Make sure we always have every index as a key
       poro_indexes.each do |index|
         data[index] = {} unless data.has_key?(index)

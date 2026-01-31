@@ -31,6 +31,35 @@ describe Poros do
       assert_equal found_object.name, @object.name
       assert_equal found_object.order, @object.order
     end
+
+    describe "with a non-permitted class" do
+      it "raises an error" do
+        author = Author.new.save
+        assert_raises(Psych::DisallowedClass) {
+          Author.find(author.uuid)
+        }
+      end
+    end
+
+    describe "with a permitted class" do
+      before do
+        Poros::Config.configure do |config|
+          config[:permitted_classes] = [Symbol, Date]
+        end
+      end
+
+      after do
+        Poros::Config.configure do |config|
+          config[:permitted_classes] = [Symbol]
+        end
+      end
+
+      it "loads successfully" do
+        author = Author.new.save
+
+        assert_equal Date, Author.find(author.uuid).birthday.class
+      end
+    end
   end
 
   describe '#where' do

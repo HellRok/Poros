@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.summary       = 'Persist and query your objects'
   spec.description   = 'Persist your objects and query them in an active record like way'
   spec.authors       = ["Sean Ross Earle"]
-  spec.email         = ["sean.earle@oeQuacki.com"]
+  spec.email         = ["sean.r.earle@gmail.com"]
   spec.homepage      = "https://github.com/HellRok/Poros"
   spec.license       = "MIT"
 
@@ -23,5 +23,5 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake"
-  spec.add_development_dependency "minitest", "~> 5.0"
+  spec.add_development_dependency "minitest"
 end

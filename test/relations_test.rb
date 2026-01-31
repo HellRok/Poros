@@ -2,6 +2,10 @@ require "test_helper"
 
 describe Poros::Relations do
   before do
+    Poros::Config.configure do |config|
+      config[:permitted_classes] = [Symbol, Date]
+    end
+
     @author_1 = Author.new(name: 'Audrey Niffenegger').save
     @author_2 = Author.new(name: 'John Steinbeck').save
     @book_1 = Book.new(title: 'The Grapes of Wrath', author: @author_2).save
@@ -25,6 +29,10 @@ describe Poros::Relations do
     @boop_3.destroy
     @boop_4.destroy
     @boop_5.destroy
+
+    Poros::Config.configure do |config|
+      config[:permitted_classes] = [Symbol]
+    end
   end
 
   describe '#has_many without options' do

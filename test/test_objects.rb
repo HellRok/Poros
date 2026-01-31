@@ -17,13 +17,14 @@ end
 class Author
   include Poros
 
-  poro_attr :name
+  poro_attr :name, :birthday
 
   has_many :books
   has_many :boops, class_name: 'DefaultObject', foreign_key: :name, primary_key: :name
 
-  def initialize(name: '')
+  def initialize(name: '', birthday: Date.today)
     @name = name
+    @birthday = birthday
   end
 
   def self.data_directory
